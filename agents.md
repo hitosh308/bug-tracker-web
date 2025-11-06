@@ -4,6 +4,7 @@
 ## 利用フレームワーク
 * Spring Boot
 ## 利用ライブラリ
+* flyway
 * thymeleaf
 * spring-jdbc
 ## データベース
