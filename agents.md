@@ -8,7 +8,7 @@
 * thymeleaf
 * spring-jdbc
 ## データベース
-* MySQL8.4
+* MySQL8.4（開発時はH2）
 ## 画面デザイン
 * Bootstrap5
 ## 画面ライブラリ
