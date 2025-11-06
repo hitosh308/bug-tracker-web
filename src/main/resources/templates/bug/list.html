@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>バグ一覧</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/bugs">バグ管理</a>
+        <div class="d-flex">
+            <a class="btn btn-outline-light" href="/bugs/new">新規登録</a>
+        </div>
+    </div>
+</nav>
+<main class="container py-4">
+    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">バグ一覧</h1>
+        <a class="btn btn-primary" href="/bugs/new">新規登録</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+            <tr>
+                <th scope="col">件名</th>
+                <th scope="col">発生システム</th>
+                <th scope="col">起票者</th>
+                <th scope="col">発生プロジェクト</th>
+                <th scope="col">発生日</th>
+                <th scope="col">再現性</th>
+                <th scope="col">影響度</th>
+                <th scope="col">ステータス</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="bug : ${bugReports}">
+                <td>
+                    <div class="fw-semibold" th:text="${bug.subject}"></div>
+                    <div class="text-muted small" th:text="${bug.phenomenon}"></div>
+                </td>
+                <td th:text="${bug.systemName}"></td>
+                <td th:text="${bug.reporter}"></td>
+                <td th:text="${bug.projectName}"></td>
+                <td th:text="${bug.occurrenceDate}"></td>
+                <td th:text="${bug.reproducibility != null ? bug.reproducibility.label : '-'}"></td>
+                <td th:text="${bug.impact != null ? bug.impact.label : '-'}"></td>
+                <td th:text="${bug.status != null ? bug.status.label : '-'}"></td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(bugReports)}">
+                <td colspan="8" class="text-center text-muted py-4">登録されたバグはありません</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
