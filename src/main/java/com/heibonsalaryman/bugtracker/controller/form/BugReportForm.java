@@ -17,7 +17,6 @@ public class BugReportForm {
     @NotBlank(message = "発生システムは必須です")
     private String systemName;
 
-    @NotBlank(message = "起票者は必須です")
     private String reporter;
 
     @NotBlank(message = "発生プロジェクトは必須です")

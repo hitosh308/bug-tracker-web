@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Service
 public class BugReportService {
@@ -25,6 +26,9 @@ public class BugReportService {
     public BugReport create(BugReport bugReport) {
         if (bugReport.getReportedAt() == null) {
             bugReport.setReportedAt(LocalDateTime.now());
+        }
+        if (!StringUtils.hasText(bugReport.getReporter())) {
+            bugReport.setReporter("匿名ユーザー");
         }
         if (bugReport.getStatus() == null) {
             bugReport.setStatus(BugStatus.UNRESOLVED);

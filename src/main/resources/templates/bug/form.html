@@ -29,9 +29,9 @@
                         <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('systemName')}" th:errors="*{systemName}"></div>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">起票者 <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" th:field="*{reporter}">
-                        <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('reporter')}" th:errors="*{reporter}"></div>
+                        <label class="form-label">起票者</label>
+                        <input type="text" class="form-control" th:field="*{reporter}" placeholder="匿名で登録する場合は空欄のまま">
+                        <div class="form-text">未記入の場合は匿名ユーザーとして登録されます。</div>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">発生プロジェクト <span class="text-danger">*</span></label>
