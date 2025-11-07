@@ -3,6 +3,7 @@ package com.heibonsalaryman.bugtracker.controller;
 import com.heibonsalaryman.bugtracker.model.BugPriority;
 import com.heibonsalaryman.bugtracker.model.BugStatus;
 import com.heibonsalaryman.bugtracker.model.BugTicketRegistration;
+import com.heibonsalaryman.bugtracker.model.BugTrendSummary;
 import com.heibonsalaryman.bugtracker.model.ProjectMaster;
 import com.heibonsalaryman.bugtracker.model.SystemMaster;
 import com.heibonsalaryman.bugtracker.model.VendorMaster;
@@ -22,7 +23,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/bugs")
@@ -102,5 +106,46 @@ public class BugTicketController {
         ));
         redirectAttributes.addFlashAttribute("message", "バグを登録しました");
         return "redirect:/bugs";
+    }
+
+    @GetMapping("/trends")
+    public String trends(Model model) {
+        BugTrendSummary summary = bugTicketService.getMonthlyTrend(6);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM");
+
+        List<String> labels = summary.months().stream()
+                .map(month -> month.format(formatter))
+                .toList();
+
+        Map<String, List<Long>> statusCounts = new LinkedHashMap<>();
+        Map<String, String> displayNames = new LinkedHashMap<>();
+        Map<String, String> backgroundColors = new LinkedHashMap<>();
+        Map<String, String> borderColors = new LinkedHashMap<>();
+
+        for (BugStatus status : BugStatus.values()) {
+            String key = status.name();
+            statusCounts.put(key, summary.statusCounts().get(status));
+            displayNames.put(key, status.displayName());
+            backgroundColors.put(key, switch (status) {
+                case NEW -> "rgba(54, 162, 235, 0.2)";
+                case IN_PROGRESS -> "rgba(255, 159, 64, 0.2)";
+                case RESOLVED -> "rgba(75, 192, 192, 0.2)";
+                case CLOSED -> "rgba(201, 203, 207, 0.2)";
+            });
+            borderColors.put(key, switch (status) {
+                case NEW -> "rgba(54, 162, 235, 1)";
+                case IN_PROGRESS -> "rgba(255, 159, 64, 1)";
+                case RESOLVED -> "rgba(75, 192, 192, 1)";
+                case CLOSED -> "rgba(201, 203, 207, 1)";
+            });
+        }
+
+        model.addAttribute("labels", labels);
+        model.addAttribute("statusCounts", statusCounts);
+        model.addAttribute("statusDisplayNames", displayNames);
+        model.addAttribute("statusBackgroundColors", backgroundColors);
+        model.addAttribute("statusBorderColors", borderColors);
+
+        return "bugs/trends";
     }
 }
